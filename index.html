@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovatrics Merch Store</title>
+    <style>
+        :root {
+            --innovatrics-dark-blue: #00234a;
+            --innovatrics-mid-blue: #00377a;
+            --innovatrics-light-blue: #0056b3;
+            --white: #ffffff;
+            --text-dark: #333;
+            --text-gray: #666;
+            --input-bg: rgba(0, 0, 0, 0.3);
+            --input-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body { 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            margin: 0; padding: 0;
+            background: linear-gradient(135deg, var(--innovatrics-dark-blue) 0%, var(--innovatrics-mid-blue) 100%);
+            display: flex; justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--white);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500vh; height: 500vh;
+            background-image: url("https://static.vecteezy.com/system/resources/previews/039/613/258/non_2x/finger-print-code-banner-or-fingerprint-pattern-vector.jpg");
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            opacity: 0.1;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container { 
+            width: 100%; max-width: 1000px; 
+            margin: 40px 20px;
+            z-index: 1;
+        }
+
+        .main-card {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 50px 40px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto;
+            color: var(--text-dark);
+        }
+
+        .main-card h1 { font-weight: 600; color: var(--innovatrics-dark-blue); margin-bottom: 5px; font-size: 2.2em; }
+        .main-card h2 { font-weight: 300; color: var(--text-gray); margin-top: 0; margin-bottom: 35px; font-size: 1.1em; }
+
+        .main-card input {
+            width: 100%; max-width: 320px;
+            padding: 15px; margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px; font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        .main-card button#login-btn {
+            width: 100%; max-width: 320px;
+            padding: 15px; 
+            background-color: var(--innovatrics-dark-blue);
+            color: white; border: none; border-radius: 8px;
+            font-size: 1.1em; font-weight: bold; cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #status-message { margin-top: 20px; color: var(--text-dark); background: transparent; border: none; padding: 0; }
+        .header-flex { display: flex; justify-content: space-between; align-items: flex-start; text-align: left; gap: 15px; }
+        .history-box { background: #f4f7f6; padding: 10px; border-radius: 8px; font-size: 0.8em; border: 1px solid #eee; flex: 1; }
+
+        #cart-summary {
+            position: sticky; top: 20px; z-index: 100;
+            background: var(--white); color: var(--text-dark); padding: 15px;
+            border-radius: 10px; margin-bottom: 30px; display: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: left;
+        }
+
+        #shop-section { display: none; margin-top: 40px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+
+        .product-card { 
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px; overflow: hidden;
+            transition: 0.3s; display: flex; flex-direction: column; text-align: center;
+        }
+        .product-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.12); }
+        .product-card img { width: 100%; height: 220px; object-fit: cover; cursor: zoom-in; }
+        .product-details { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; align-items: center; }
+        .product-card h3 { margin: 10px 0; font-size: 1.3em; color: var(--white); }
+        .price-tag { color: #4ade80; font-weight: bold; font-size: 1.4em; margin-bottom: 15px; }
+
+        .controls-row { display: flex; gap: 10px; margin-bottom: 15px; width: 100%; justify-content: center; }
+        .control-group { text-align: left; }
+        label { font-size: 0.75em; color: #ccc; display: block; margin-bottom: 5px; }
+        
+        select, .qty-input { 
+            width: 100%; padding: 8px; border-radius: 6px; 
+            border: 1px solid var(--input-border); background: var(--input-bg);
+            color: white; font-size: 0.9em; box-sizing: border-box;
+        }
+
+        .add-btn { 
+            width: 100%; padding: 12px; 
+            background: var(--input-bg); 
+            color: white; 
+            border: 1px solid var(--input-border); 
+            border-radius: 8px; cursor: pointer; 
+            font-weight: bold; font-size: 1em; margin-top: auto;
+            transition: 0.3s;
+        }
+        .add-btn:hover { background: rgba(255, 255, 255, 0.2); border-color: white; }
+
+        .confirm-btn { background: #22c55e; color: white; padding: 12px 25px; border: none; cursor: pointer; border-radius: 8px; font-weight: bold; }
+
+        #lightbox { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; cursor: zoom-out; }
+        #lightbox img { max-width: 90%; max-height: 90%; border-radius: 10px; }
+
+    </style>
+</head>
+<body>
+
+<div id="lightbox" onclick="closeLightbox()"><img id="lightbox-img" src=""></div>
+
+<div class="container">
+    <div class="main-card">
+        <div id="login-section">
+            <h1>Hi Inno</h1>
+            <h2>Welcome to the Inno merch store 🛒</h2>
+            <input type="email" id="user-email" placeholder="Enter your company email">
+            <button id="login-btn" onclick="checkBalance()">Login 🚀</button>
+        </div>
+        <div id="status-message"></div>
+    </div>
+
+    <div id="cart-summary">
+        <h3 style="margin-top:0;">🛒 Your Shopping Cart</h3>
+        <div id="cart-items-list" style="margin-bottom:15px; font-size:0.9em;"></div>
+        <div style="display:flex; justify-content: space-between; align-items: center; border-top:1px solid #eee; padding-top:10px;">
+            <strong>Total Cost: <span id="cart-total-price">0</span> Credits</strong>
+            <div>
+                <button onclick="clearCart()" style="background:#ccc; border:none; color:white; padding:10px; border-radius:6px; margin-right:5px;">Clear</button>
+                <button class="confirm-btn" onclick="submitOrder()">Confirm Order ✅</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="shop-section">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h2 style="font-size: 2em; color: white; margin-bottom: 10px;">✨ Welcome to the Inno merch shop ✨</h2>
+            <p style="font-size: 1.2em; color: white;">Your limit is 7️⃣0️⃣ credits</p>
+        </div>
+        
+        <div class="product-grid">
+            
+            <div class="product-card">
+                <img src="https://i.postimg.cc/bw6YhMDH/hoodie.jpg" alt="Hoodie" onclick="openLightbox(this.src)">
+                <div class="product-details">
+                    <h3>Hoodie</h3>
+                    <p class="price-tag">40 Credits</p>
+                    <div class="controls-row">
+                        <div style="flex: 3;" class="control-group"><label>Size</label><select id="size_Hoodie"><option>S</option><option>M</option><option>L</option><option>XL</option></select></div>
+                        <div style="flex: 3;" class="control-group"><label>Qty</label><input type="number" id="qty_Hoodie" class="qty-input" value="1" min="1"></div>
+                    </div>
+                    <button class="add-btn" onclick="addToCart('Hoodie', 40, 'Hoodie')">Add to Cart 🛒</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://i.postimg.cc/HkSWgKch/Tricko.png" alt="T-Shirt Cotton" onclick="openLightbox(this.src)">
+                <div class="product-details">
+                    <h3>T-Shirt Cotton</h3>
+                    <p class="price-tag">10 Credits</p>
+                    <div class="controls-row">
+                        <div style="flex: 3;" class="control-group"><label>Size</label><select id="size_TShirtCotton"><option>S</option><option>M</option><option>L</option><option>XL</option></select></div>
+                        <div style="flex: 3;" class="control-group"><label>Qty</label><input type="number" id="qty_TShirtCotton" class="qty-input" value="1" min="1"></div>
+                    </div>
+                    <button class="add-btn" onclick="addToCart('TShirtCotton', 10, 'T-Shirt Cotton')">Add to Cart 🛒</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://i.postimg.cc/htC4BwzM/Sportove_tricko.png" alt="T-Shirt Sport" onclick="openLightbox(this.src)">
+                <div class="product-details">
+                    <h3>T-Shirt Sport</h3>
+                    <p class="price-tag">10 Credits</p>
+                    <div class="controls-row">
+                        <div style="flex: 3;" class="control-group"><label>Size</label><select id="size_TShirtSport"><option>S</option><option>M</option><option>L</option><option>XL</option></select></div>
+                        <div style="flex: 3;" class="control-group"><label>Qty</label><input type="number" id="qty_TShirtSport" class="qty-input" value="1" min="1"></div>
+                    </div>
+                    <button class="add-btn" onclick="addToCart('TShirtSport', 10, 'T-Shirt Sport')">Add to Cart 🛒</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://i.postimg.cc/qvmBTYhc/puffka.jpg" alt="Bio Scarf" onclick="openLightbox(this.src)">
+                <div class="product-details">
+                    <h3>Bufka - Bio Cotton</h3>
+                    <p class="price-tag">5 Credits</p>
+                    <div class="controls-row">
+                        <div style="flex: 3;" class="control-group"><label>Size</label><select id="size_BufkaCotton"><option>One-size</option></select></div>
+                        <div style="flex: 3;" class="control-group"><label>Qty</label><input type="number" id="qty_BufkaCotton" class="qty-input" value="1" min="1"></div>
+                    </div>
+                    <button class="add-btn" onclick="addToCart('BufkaCotton', 5, 'Bufka - Bio Cotton')">Add to Cart 🛒</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://i.postimg.cc/qvmBTYhc/puffka.jpg" alt="Merino Scarf" onclick="openLightbox(this.src)">
+                <div class="product-details">
+                    <h3>Bufka - Merino</h3>
+                    <p class="price-tag">15 Credits</p>
+                    <div class="controls-row">
+                        <div style="flex: 3;" class="control-group"><label>Size</label><select id="size_BufkaMerino"><option>One-size</option></select></div>
+                        <div style="flex: 3;" class="control-group"><label>Qty</label><input type="number" id="qty_BufkaMerino" class="qty-input" value="1" min="1"></div>
+                    </div>
+                    <button class="add-btn" onclick="addToCart('BufkaMerino', 15, 'Bufka - Merino')">Add to Cart 🛒</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://i.postimg.cc/t4rRjfZN/Siltovka.png" alt="Sport Cap" onclick="openLightbox(this.src)">
+                <div class="product-details">
+                    <h3>Sport Cap</h3>
+                    <p class="price-tag">10 Credits</p>
+                    <div class="controls-row">
+                        <div style="flex: 3;" class="control-group"><label>Size</label><select id="size_SportCap"><option>One-size</option></select></div>
+                        <div style="flex: 3;" class="control-group"><label>Qty</label><input type="number" id="qty_SportCap" class="qty-input" value="1" min="1"></div>
+                    </div>
+                    <button class="add-btn" onclick="addToCart('SportCap', 10, 'Sport Cap')">Add to Cart 🛒</button>
+                </div>
+            </div>
+
+        </div> 
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgoBGFsBsNHK9N8pyt9qPU2CgazbfA-YPtSyya_aAIHygBYUaSZ1Sv_ZQ7i2G4nkM/exec";
+    let cart = [];
+    let currentBalance = 0;
+
+    function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').style.display = 'flex'; }
+    function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
+
+    function checkBalance() {
+        const email = document.getElementById('user-email').value;
+        if (!email) return alert("Please enter your email");
+        document.getElementById('status-message').innerHTML = '<span style="color: #666;">⏱ Loading...</span>';
+        
+        fetch(SCRIPT_URL + "?email=" + encodeURIComponent(email))
+            .then(res => res.json())
+            .then(data => {
+                if (data) {
+                    currentBalance = data.credit;
+                    let historyHTML = "";
+                    if (data.history && data.history.length > 0) {
+                        historyHTML = '<div class="history-box">' +
+                                      '<strong>Recent Orders:</strong><ul style="margin:5px 0; padding-left:15px; color:#555;">' +
+                                      data.history.map(o => `<li>${o.date}: ${o.item} (-${o.price})</li>`).join('') +
+                                      '</ul></div>';
+                    } else {
+                        historyHTML = '<p style="font-size:0.8em; color:#999;">No orders yet.</p>';
+                    }
+
+                    let firstName = data.name.includes(',') ? data.name.split(',')[1].trim() : data.name;
+
+                    document.getElementById('status-message').innerHTML = `
+                        <div class="header-flex">
+                            <div>Welcome, <strong>${firstName}</strong>! 👋<br>Balance: <span style="color:#22c55e; font-size: 1.2em; font-weight:bold;">${data.credit} Credits</span></div>
+                            <div>${historyHTML}</div>
+                        </div>`;
+                    document.getElementById('shop-section').style.display = "block";
+                    document.getElementById('login-section').style.display = "none";
+                } else {
+                    document.getElementById('status-message').innerHTML = '<span style="color: #ff4d4d;">❌ User not found.</span>';
+                }
+            });
+    }
+
+    function addToCart(id, price, name) {
+        const size = document.getElementById('size_' + id).value;
+        const qty = parseInt(document.getElementById('qty_' + id).value);
+        if (isNaN(qty) || qty < 1) return alert("Invalid quantity");
+        cart.push({ name, size, qty, total: price * qty });
+        renderCart();
+    }
+
+    function renderCart() {
+        const summary = document.getElementById('cart-summary');
+        const list = document.getElementById('cart-items-list');
+        const totalDisp = document.getElementById('cart-total-price');
+        if (cart.length === 0) { summary.style.display = "none"; return; }
+        summary.style.display = "block";
+        list.innerHTML = cart.map((item, index) => `<div style="margin-bottom:5px;">• ${item.qty}x ${item.name} (${item.size}) - ${item.total} pts <span style="color:#ff4d4d; cursor:pointer; font-weight:bold; margin-left:10px;" onclick="removeItem(${index})">[x]</span></div>`).join('');
+        const total = cart.reduce((sum, item) => sum + item.total, 0);
+        totalDisp.innerText = total;
+    }
+
+    function removeItem(index) { cart.splice(index, 1); renderCart(); }
+    function clearCart() { cart = []; renderCart(); }
+
+    function submitOrder() {
+        const total = cart.reduce((sum, item) => sum + item.total, 0);
+        if (total > currentBalance) return alert("😥 Not enough credits!");
+        const email = document.getElementById('user-email').value;
+        const details = cart.map(i => `${i.qty}x ${i.name} (${i.size})`).join(', ');
+        if (!confirm(`🛒 Confirm order for ${total} credits?\n\nItems: ${details}`)) return;
+        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ email: email, item: details, price: total }) })
+        .then(res => res.text())
+        .then(res => { if (res === "SUCCESS") { alert("🎉 Your order has been successfully placed! Baska Rybarova will let you know as soon as it arrives 📦 "); clearCart(); checkBalance(); } else { alert("Error: " + res); } });
+    }
+</script>
+</body>
+</html>
