@@ -8,6 +8,8 @@
     
     <style>
         :root {
+            /* Jednotná hlboká Innovatrics modrá pre celé pozadie */
+            --innovatrics-bg-blue: #001f3f; 
             --innovatrics-dark-blue: #00234a;
             --innovatrics-mid-blue: #00377a;
             --innovatrics-light-blue: #0056b3;
@@ -19,27 +21,29 @@
         }
 
         body { 
-            /* NASTAVENIE MONTSERRAT PRE CELÝ WEB */
             font-family: 'Montserrat', sans-serif; 
             margin: 0; padding: 0;
-            background: linear-gradient(135deg, var(--innovatrics-dark-blue) 0%, var(--innovatrics-mid-blue) 100%);
+            /* ZMENA: Jednofarebné hlboké pozadie pre konzistenciu */
+            background-color: var(--innovatrics-bg-blue); 
+            color: var(--white);
             display: flex; justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: var(--white);
             position: relative;
             overflow-x: hidden;
         }
 
+        /* OPRAVA POZADIA: Opakujúci sa, jemný fingerprint vzor po celej ploche */
         body::before {
             content: "";
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 500vh; height: 500vh;
+            position: fixed; /* Fixované, aby sa nehýbalo pri scrollovaní */
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background-image: url("https://static.vecteezy.com/system/resources/previews/039/613/258/non_2x/finger-print-code-banner-or-fingerprint-pattern-vector.jpg");
-            background-size: contain; background-repeat: no-repeat; background-position: center;
-            opacity: 0.05;
+            background-size: 150px; /* Zmenšená veľkosť vzoru */
+            background-repeat: repeat; /* Opakovanie vzoru (dlaždice) */
+            background-position: center;
+            opacity: 0.03; /* Ešte jemnejšie, takmer neviditeľné */
             z-index: 0;
             pointer-events: none;
         }
@@ -48,6 +52,7 @@
             width: 100%; max-width: 1000px; 
             margin: 40px 20px;
             z-index: 1;
+            position: relative; /* Pre istotu */
         }
 
         .main-card {
