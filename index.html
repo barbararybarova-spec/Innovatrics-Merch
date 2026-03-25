@@ -347,7 +347,7 @@
 
     function submitOrder() {
         const total = cart.reduce((sum, item) => sum + item.total, 0);
-        if (total > currentBalance) return alert("❌ Not enough credits!");
+        if (total > currentBalance) return alert("😥 Not enough credits!");
         const email = localStorage.getItem('userEmail');
         const details = cart.map(i => `${i.qty}x ${i.name} (${i.size})`).join(', ');
         if (!confirm(`🛒 Confirm order for ${total} credits?\n\nItems: ${details}`)) return;
@@ -356,7 +356,7 @@
         
         fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ email: email, item: details, price: total }) })
         .then(res => res.text())
-        .then(res => { if (res === "SUCCESS") { alert("🎉 SUCCESS!"); clearCart(); checkBalance(); } else { alert("Error: " + res); } });
+        .then(res => { if (res === "SUCCESS") { alert("🎉 Your order has been successfully placed! Baska Rybarova will let you know as soon as it arrives 📦"); clearCart(); checkBalance(); } else { alert("Error: " + res); } });
     }
 </script>
 </body>
