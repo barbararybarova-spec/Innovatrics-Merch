@@ -8,7 +8,6 @@
     
     <style>
         :root {
-            /* Jednotná hlboká Innovatrics modrá pre celé pozadie */
             --innovatrics-bg-blue: #001f3f; 
             --innovatrics-dark-blue: #00234a;
             --innovatrics-mid-blue: #00377a;
@@ -23,7 +22,6 @@
         body { 
             font-family: 'Montserrat', sans-serif; 
             margin: 0; padding: 0;
-            /* ZMENA: Jednofarebné hlboké pozadie pre konzistenciu */
             background-color: var(--innovatrics-bg-blue); 
             color: var(--white);
             display: flex; justify-content: center;
@@ -33,17 +31,16 @@
             overflow-x: hidden;
         }
 
-        /* OPRAVA POZADIA: Opakujúci sa, jemný fingerprint vzor po celej ploche */
         body::before {
             content: "";
-            position: fixed; /* Fixované, aby sa nehýbalo pri scrollovaní */
+            position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
             background-image: url("https://static.vecteezy.com/system/resources/previews/039/613/258/non_2x/finger-print-code-banner-or-fingerprint-pattern-vector.jpg");
-            background-size: 150px; /* Zmenšená veľkosť vzoru */
-            background-repeat: repeat; /* Opakovanie vzoru (dlaždice) */
+            background-size: 150px;
+            background-repeat: repeat;
             background-position: center;
-            opacity: 0.03; /* Ešte jemnejšie, takmer neviditeľné */
+            opacity: 0.03;
             z-index: 0;
             pointer-events: none;
         }
@@ -52,9 +49,10 @@
             width: 100%; max-width: 1000px; 
             margin: 40px 20px;
             z-index: 1;
-            position: relative; /* Pre istotu */
+            position: relative;
         }
 
+        /* LOGIN CARD */
         .main-card {
             background: rgba(255, 255, 255, 0.98);
             padding: 40px;
@@ -76,6 +74,11 @@
             border: 2px solid #ddd;
             border-radius: 8px; font-size: 1em;
             box-sizing: border-box;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+        .main-card input:focus {
+            border-color: var(--innovatrics-light-blue);
         }
 
         .main-card button#login-btn {
@@ -85,32 +88,73 @@
             background-color: var(--innovatrics-dark-blue);
             color: white; border: none; border-radius: 8px;
             font-size: 1.1em; font-weight: 700; cursor: pointer;
-            transition: 0.3s;
+            transition: background-color 0.2s, opacity 0.2s;
+        }
+        .main-card button#login-btn:hover:not(:disabled) {
+            background-color: var(--innovatrics-mid-blue);
+        }
+        .main-card button#login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Hint text pod emailom */
+        .email-hint {
+            font-size: 0.75em;
+            color: #aaa;
+            margin-top: -12px;
+            margin-bottom: 16px;
+            display: block;
         }
 
         #status-message { margin-top: 20px; color: var(--text-dark); background: transparent; border: none; padding: 0; }
-        .header-flex { display: flex; justify-content: space-between; align-items: flex-start; text-align: left; gap: 15px; }
-        .history-box { background: #f4f7f6; padding: 10px; border-radius: 8px; font-size: 0.8em; border: 1px solid #eee; flex: 1; }
+        .header-flex { display: flex; justify-content: space-between; align-items: flex-start; text-align: left; gap: 15px; flex-wrap: wrap; }
+        .history-box { background: #f4f7f6; padding: 10px; border-radius: 8px; font-size: 0.8em; border: 1px solid #eee; flex: 1; min-width: 160px; }
 
+        /* CART SUMMARY */
         #cart-summary {
             position: sticky; top: 20px; z-index: 100;
             background: var(--white); color: var(--text-dark); padding: 15px;
             border-radius: 10px; margin-bottom: 30px; display: none;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             text-align: left;
+            animation: slideDown 0.2s ease;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         #shop-section { display: none; margin-top: 40px; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
 
+        /* PRODUCT CARDS */
         .product-card { 
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255,255,255,0.15);
             border-radius: 16px; overflow: hidden;
-            transition: 0.3s; display: flex; flex-direction: column; text-align: center;
+            transition: transform 0.25s, background 0.25s; 
+            display: flex; flex-direction: column; text-align: center;
         }
         .product-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.12); }
-        .product-card img { width: 100%; height: 220px; object-fit: cover; cursor: zoom-in; }
+
+        .product-img-wrap { position: relative; overflow: hidden; }
+        .product-card img { 
+            width: 100%; height: 220px; object-fit: cover; cursor: zoom-in;
+            transition: transform 0.35s ease;
+            display: block;
+        }
+        .product-card:hover img { transform: scale(1.04); }
+
+        .zoom-hint {
+            position: absolute; bottom: 8px; right: 10px;
+            background: rgba(0,0,0,0.5); color: white;
+            font-size: 0.65em; padding: 3px 8px; border-radius: 20px;
+            pointer-events: none; opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .product-card:hover .zoom-hint { opacity: 1; }
+
         .product-details { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; align-items: center; }
         .product-card h3 { margin: 10px 0; font-size: 1.3em; color: var(--white); font-weight: 600; }
         .price-tag { color: #4ade80; font-weight: 700; font-size: 1.4em; margin-bottom: 15px; }
@@ -125,6 +169,7 @@
             border: 1px solid var(--input-border); background: var(--input-bg);
             color: white; font-size: 0.9em; box-sizing: border-box;
         }
+        select option { background: #00234a; color: white; }
 
         .add-btn { 
             font-family: 'Montserrat', sans-serif;
@@ -134,27 +179,90 @@
             border: 1px solid var(--input-border); 
             border-radius: 8px; cursor: pointer; 
             font-weight: 700; font-size: 1em; margin-top: auto;
-            transition: 0.3s;
+            transition: background 0.2s, border-color 0.2s, transform 0.1s;
         }
         .add-btn:hover { background: rgba(255, 255, 255, 0.2); border-color: white; }
+        .add-btn:active { transform: scale(0.97); }
 
-        .confirm-btn { font-family: 'Montserrat', sans-serif; background: #22c55e; color: white; padding: 12px 25px; border: none; cursor: pointer; border-radius: 8px; font-weight: 700; }
+        /* Animácia po pridaní do košíka */
+        .add-btn.added {
+            background: rgba(34, 197, 94, 0.25);
+            border-color: #22c55e;
+            color: #4ade80;
+        }
 
-        #lightbox { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; cursor: zoom-out; }
-        #lightbox img { max-width: 90%; max-height: 90%; border-radius: 10px; }
+        .confirm-btn { 
+            font-family: 'Montserrat', sans-serif; 
+            background: #22c55e; color: white; padding: 12px 25px; 
+            border: none; cursor: pointer; border-radius: 8px; font-weight: 700;
+            transition: background 0.2s;
+        }
+        .confirm-btn:hover { background: #16a34a; }
 
+        /* LIGHTBOX */
+        #lightbox { 
+            display: none; position: fixed; z-index: 9999; 
+            left: 0; top: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.92); 
+            justify-content: center; align-items: center; 
+            cursor: zoom-out;
+            animation: fadeIn 0.15s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        #lightbox img { 
+            max-width: 90%; max-height: 88vh; 
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        #lightbox-close {
+            position: fixed; top: 20px; right: 28px;
+            color: white; font-size: 2em; cursor: pointer;
+            line-height: 1; opacity: 0.7;
+            transition: opacity 0.15s;
+            user-select: none;
+        }
+        #lightbox-close:hover { opacity: 1; }
+
+        /* ERROR TOAST */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #1e293b; color: white;
+            padding: 12px 24px; border-radius: 30px;
+            font-size: 0.9em; z-index: 9998;
+            animation: toastIn 0.25s ease, toastOut 0.3s ease 2.5s forwards;
+            white-space: nowrap;
+        }
+        @keyframes toastIn { from { opacity:0; transform: translateX(-50%) translateY(12px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+        @keyframes toastOut { to { opacity:0; transform: translateX(-50%) translateY(12px); } }
+
+        /* RESPONSIVE */
+        @media (max-width: 500px) {
+            .main-card { padding: 28px 20px; }
+            .main-card h1 { font-size: 1.7em; }
+            #cart-summary { position: relative; top: 0; }
+        }
     </style>
 </head>
 <body>
 
-<div id="lightbox" onclick="closeLightbox()"><img id="lightbox-img" src=""></div>
+<div id="lightbox" onclick="closeLightbox()">
+    <span id="lightbox-close" onclick="closeLightbox()">&#x2715;</span>
+    <img id="lightbox-img" src="" alt="Product preview">
+</div>
 
 <div class="container">
     <div class="main-card">
         <div id="login-section">
-            <h1>Hi Inno</h1>
+            <h1>Hi Inno 👋</h1>
             <h2>Welcome to the Inno merch store 🛒</h2>
-            <input type="email" id="user-email" placeholder="Enter your company email">
+            <input 
+                type="email" 
+                id="user-email" 
+                placeholder="your.name@innovatrics.com"
+                onkeydown="if(event.key==='Enter') checkBalance()"
+                autocomplete="email"
+            >
+            <span class="email-hint">Press Enter or click Login</span>
             <button id="login-btn" onclick="checkBalance()">Login 🚀</button>
         </div>
         <div id="status-message"></div>
@@ -163,10 +271,10 @@
     <div id="cart-summary">
         <h3 style="margin-top:0;">🛒 Your Shopping Cart</h3>
         <div id="cart-items-list" style="margin-bottom:15px; font-size:0.9em;"></div>
-        <div style="display:flex; justify-content: space-between; align-items: center; border-top:1px solid #eee; padding-top:10px;">
-            <strong>Total Cost: <span id="cart-total-price">0</span> Credits</strong>
+        <div style="display:flex; justify-content: space-between; align-items: center; border-top:1px solid #eee; padding-top:10px; flex-wrap:wrap; gap:10px;">
+            <strong>Total: <span id="cart-total-price">0</span> Credits</strong>
             <div>
-                <button onclick="clearCart()" style="background:#ccc; border:none; color:white; padding:10px; border-radius:6px; cursor:pointer; margin-right:5px;">Clear</button>
+                <button onclick="clearCart()" style="background:#e2e8f0; border:none; color:#475569; padding:10px 14px; border-radius:6px; cursor:pointer; margin-right:5px; font-family:'Montserrat',sans-serif; font-weight:600;">Clear</button>
                 <button class="confirm-btn" onclick="submitOrder()">Confirm Order ✅</button>
             </div>
         </div>
@@ -175,86 +283,104 @@
     <div id="shop-section">
         <div style="text-align: center; margin-bottom: 40px;">
             <h2 style="font-size: 2em; color: white; margin-bottom: 10px; font-weight: 700;">✨ Welcome to the Inno merch shop ✨</h2>
-            <p style="font-size: 1.2em; color: white;">Your limit is 7️⃣0️⃣ credits</p>
+            <p style="font-size: 1.2em; color: rgba(255,255,255,0.85);">Your limit is 7️⃣0️⃣ credits</p>
         </div>
         
         <div class="product-grid">
             
             <div class="product-card">
-                <img src="https://i.postimg.cc/bw6YhMDH/hoodie.jpg" alt="Hoodie" onclick="openLightbox(this.src)">
+                <div class="product-img-wrap">
+                    <img src="https://i.postimg.cc/bw6YhMDH/hoodie.jpg" alt="Hoodie" onclick="openLightbox(this.src)">
+                    <span class="zoom-hint">🔍 zoom</span>
+                </div>
                 <div class="product-details">
                     <h3>Hoodie</h3>
                     <p class="price-tag">40 Credits</p>
                     <div class="controls-row">
                         <div style="flex: 3;" class="control-group"><label>Size</label><select id="size_Hoodie"><option>S</option><option>M</option><option>L</option><option>XL</option></select></div>
-                        <div style="flex: 3;" class="control-group"><label>Qty</label><input type="number" id="qty_Hoodie" class="qty-input" value="1" min="1"></div>
+                        <div style="flex: 2;" class="control-group"><label>Qty</label><input type="number" id="qty_Hoodie" class="qty-input" value="1" min="1" max="10"></div>
                     </div>
-                    <button class="add-btn" onclick="addToCart('Hoodie', 40, 'Hoodie')">Add to Cart 🛒</button>
+                    <button class="add-btn" id="btn_Hoodie" onclick="addToCart('Hoodie', 40, 'Hoodie')">Add to Cart 🛒</button>
                 </div>
             </div>
 
             <div class="product-card">
-                <img src="https://i.postimg.cc/HkSWgKch/Tricko.png" alt="T-Shirt Cotton" onclick="openLightbox(this.src)">
+                <div class="product-img-wrap">
+                    <img src="https://i.postimg.cc/HkSWgKch/Tricko.png" alt="T-Shirt Cotton" onclick="openLightbox(this.src)">
+                    <span class="zoom-hint">🔍 zoom</span>
+                </div>
                 <div class="product-details">
                     <h3>T-Shirt Cotton</h3>
                     <p class="price-tag">10 Credits</p>
                     <div class="controls-row">
                         <div style="flex: 3;" class="control-group"><label>Size</label><select id="size_TShirtCotton"><option>S</option><option>M</option><option>L</option><option>XL</option></select></div>
-                        <div style="flex: 3;" class="control-group"><label>Qty</label><input type="number" id="qty_TShirtCotton" class="qty-input" value="1" min="1"></div>
+                        <div style="flex: 2;" class="control-group"><label>Qty</label><input type="number" id="qty_TShirtCotton" class="qty-input" value="1" min="1" max="10"></div>
                     </div>
-                    <button class="add-btn" onclick="addToCart('TShirtCotton', 10, 'T-Shirt Cotton')">Add to Cart 🛒</button>
+                    <button class="add-btn" id="btn_TShirtCotton" onclick="addToCart('TShirtCotton', 10, 'T-Shirt Cotton')">Add to Cart 🛒</button>
                 </div>
             </div>
 
             <div class="product-card">
-                <img src="https://i.postimg.cc/htC4BwzM/Sportove_tricko.png" alt="T-Shirt Sport" onclick="openLightbox(this.src)">
+                <div class="product-img-wrap">
+                    <img src="https://i.postimg.cc/htC4BwzM/Sportove_tricko.png" alt="T-Shirt Sport" onclick="openLightbox(this.src)">
+                    <span class="zoom-hint">🔍 zoom</span>
+                </div>
                 <div class="product-details">
                     <h3>T-Shirt Sport</h3>
                     <p class="price-tag">10 Credits</p>
                     <div class="controls-row">
                         <div style="flex: 3;" class="control-group"><label>Size</label><select id="size_TShirtSport"><option>S</option><option>M</option><option>L</option><option>XL</option></select></div>
-                        <div style="flex: 3;" class="control-group"><label>Qty</label><input type="number" id="qty_TShirtSport" class="qty-input" value="1" min="1"></div>
+                        <div style="flex: 2;" class="control-group"><label>Qty</label><input type="number" id="qty_TShirtSport" class="qty-input" value="1" min="1" max="10"></div>
                     </div>
-                    <button class="add-btn" onclick="addToCart('TShirtSport', 10, 'T-Shirt Sport')">Add to Cart 🛒</button>
+                    <button class="add-btn" id="btn_TShirtSport" onclick="addToCart('TShirtSport', 10, 'T-Shirt Sport')">Add to Cart 🛒</button>
                 </div>
             </div>
 
             <div class="product-card">
-                <img src="https://i.postimg.cc/qvmBTYhc/puffka.jpg" alt="Bio Scarf" onclick="openLightbox(this.src)">
+                <div class="product-img-wrap">
+                    <img src="https://i.postimg.cc/qvmBTYhc/puffka.jpg" alt="Bufka Bio Cotton" onclick="openLightbox(this.src)">
+                    <span class="zoom-hint">🔍 zoom</span>
+                </div>
                 <div class="product-details">
                     <h3>Bufka - Bio Cotton</h3>
                     <p class="price-tag">5 Credits</p>
                     <div class="controls-row">
                         <div style="flex: 3;" class="control-group"><label>Size</label><select id="size_BufkaCotton"><option>One-size</option></select></div>
-                        <div style="flex: 3;" class="control-group"><label>Qty</label><input type="number" id="qty_BufkaCotton" class="qty-input" value="1" min="1"></div>
+                        <div style="flex: 2;" class="control-group"><label>Qty</label><input type="number" id="qty_BufkaCotton" class="qty-input" value="1" min="1" max="10"></div>
                     </div>
-                    <button class="add-btn" onclick="addToCart('BufkaCotton', 5, 'Bufka - Bio Cotton')">Add to Cart 🛒</button>
+                    <button class="add-btn" id="btn_BufkaCotton" onclick="addToCart('BufkaCotton', 5, 'Bufka - Bio Cotton')">Add to Cart 🛒</button>
                 </div>
             </div>
 
             <div class="product-card">
-                <img src="https://i.postimg.cc/qvmBTYhc/puffka.jpg" alt="Merino Scarf" onclick="openLightbox(this.src)">
+                <div class="product-img-wrap">
+                    <img src="https://i.postimg.cc/qvmBTYhc/puffka.jpg" alt="Bufka Merino" onclick="openLightbox(this.src)">
+                    <span class="zoom-hint">🔍 zoom</span>
+                </div>
                 <div class="product-details">
                     <h3>Bufka - Merino</h3>
                     <p class="price-tag">15 Credits</p>
                     <div class="controls-row">
                         <div style="flex: 3;" class="control-group"><label>Size</label><select id="size_BufkaMerino"><option>One-size</option></select></div>
-                        <div style="flex: 3;" class="control-group"><label>Qty</label><input type="number" id="qty_BufkaMerino" class="qty-input" value="1" min="1"></div>
+                        <div style="flex: 2;" class="control-group"><label>Qty</label><input type="number" id="qty_BufkaMerino" class="qty-input" value="1" min="1" max="10"></div>
                     </div>
-                    <button class="add-btn" onclick="addToCart('BufkaMerino', 15, 'Bufka - Merino')">Add to Cart 🛒</button>
+                    <button class="add-btn" id="btn_BufkaMerino" onclick="addToCart('BufkaMerino', 15, 'Bufka - Merino')">Add to Cart 🛒</button>
                 </div>
             </div>
 
             <div class="product-card">
-                <img src="https://i.postimg.cc/t4rRjfZN/Siltovka.png" alt="Sport Cap" onclick="openLightbox(this.src)">
+                <div class="product-img-wrap">
+                    <img src="https://i.postimg.cc/t4rRjfZN/Siltovka.png" alt="Sport Cap" onclick="openLightbox(this.src)">
+                    <span class="zoom-hint">🔍 zoom</span>
+                </div>
                 <div class="product-details">
                     <h3>Sport Cap</h3>
                     <p class="price-tag">10 Credits</p>
                     <div class="controls-row">
                         <div style="flex: 3;" class="control-group"><label>Size</label><select id="size_SportCap"><option>One-size</option></select></div>
-                        <div style="flex: 3;" class="control-group"><label>Qty</label><input type="number" id="qty_SportCap" class="qty-input" value="1" min="1"></div>
+                        <div style="flex: 2;" class="control-group"><label>Qty</label><input type="number" id="qty_SportCap" class="qty-input" value="1" min="1" max="10"></div>
                     </div>
-                    <button class="add-btn" onclick="addToCart('SportCap', 10, 'Sport Cap')">Add to Cart 🛒</button>
+                    <button class="add-btn" id="btn_SportCap" onclick="addToCart('SportCap', 10, 'Sport Cap')">Add to Cart 🛒</button>
                 </div>
             </div>
 
@@ -267,6 +393,30 @@
     let cart = [];
     let currentBalance = 0;
 
+    // --- LIGHTBOX ---
+    function openLightbox(src) {
+        document.getElementById('lightbox-img').src = src;
+        document.getElementById('lightbox').style.display = 'flex';
+    }
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeLightbox();
+    });
+
+    // --- TOAST ---
+    function showToast(msg) {
+        const existing = document.querySelector('.toast');
+        if (existing) existing.remove();
+        const t = document.createElement('div');
+        t.className = 'toast';
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+    }
+
+    // --- LOGIN ---
     window.onload = function() {
         const savedEmail = localStorage.getItem('userEmail');
         if (savedEmail) {
@@ -276,24 +426,33 @@
     };
 
     function logout() {
+        if (!confirm('Switch user / logout?')) return;
         localStorage.removeItem('userEmail');
         location.reload();
     }
 
-    function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').style.display = 'flex'; }
-    function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
+    function setLoginLoading(loading) {
+        const btn = document.getElementById('login-btn');
+        if (!btn) return;
+        btn.disabled = loading;
+        btn.innerText = loading ? '⏳ Loading...' : 'Login 🚀';
+    }
 
     function checkBalance() {
-        const emailInput = document.getElementById('user-email').value;
-        if (!emailInput) return alert("Please enter your email");
-        document.getElementById('status-message').innerHTML = '<span style="color: #666;">⏱ Loading...</span>';
+        const emailInput = document.getElementById('user-email').value.trim();
+        if (!emailInput) { showToast('⚠️ Please enter your email'); return; }
+        
+        setLoginLoading(true);
+        document.getElementById('status-message').innerHTML = '<span style="color:#888; font-size:0.9em;">⏱ Checking your account...</span>';
         
         fetch(SCRIPT_URL + "?email=" + encodeURIComponent(emailInput))
             .then(res => res.json())
             .then(data => {
+                setLoginLoading(false);
                 if (data) {
                     localStorage.setItem('userEmail', emailInput);
                     currentBalance = data.credit;
+
                     let historyHTML = "";
                     if (data.history && data.history.length > 0) {
                         historyHTML = '<div class="history-box">' +
@@ -301,7 +460,7 @@
                                       data.history.map(o => `<li>${o.date}: ${o.item} (-${o.price})</li>`).join('') +
                                       '</ul></div>';
                     } else {
-                        historyHTML = '<p style="font-size:0.8em; color:#999;">No orders yet.</p>';
+                        historyHTML = '<p style="font-size:0.8em; color:#999; margin:0;">No orders yet.</p>';
                     }
 
                     let firstName = data.name.includes(',') ? data.name.split(',')[1].trim() : data.name;
@@ -310,7 +469,7 @@
                         <div class="header-flex">
                             <div>
                                 Welcome, <strong>${firstName}</strong>! 👋<br>
-                                Balance: <span style="color:#22c55e; font-size: 1.2em; font-weight:bold;">${data.credit} Credits</span><br>
+                                Balance: <span style="color:#22c55e; font-size:1.2em; font-weight:bold;">${data.credit} Credits</span><br>
                                 <span onclick="logout()" style="text-decoration:underline; font-size:0.7em; cursor:pointer; color:#888;">Logout (switch user)</span>
                             </div>
                             <div>${historyHTML}</div>
@@ -318,17 +477,37 @@
                     document.getElementById('shop-section').style.display = "block";
                     document.getElementById('login-section').style.display = "none";
                 } else {
-                    document.getElementById('status-message').innerHTML = '<span style="color: #ff4d4d;">❌ User not found.</span>';
+                    document.getElementById('status-message').innerHTML = '<span style="color:#e53e3e;">❌ User not found. Check your email address.</span>';
                 }
+            })
+            .catch(() => {
+                setLoginLoading(false);
+                document.getElementById('status-message').innerHTML = '<span style="color:#e53e3e;">❌ Connection error. Try again.</span>';
             });
     }
 
+    // --- CART ---
     function addToCart(id, price, name) {
-        const size = document.getElementById('size_' + id).value;
-        const qty = parseInt(document.getElementById('qty_' + id).value);
-        if (isNaN(qty) || qty < 1) return alert("Invalid quantity");
+        const sizeEl = document.getElementById('size_' + id);
+        const qtyEl = document.getElementById('qty_' + id);
+        const size = sizeEl ? sizeEl.value : 'One-size';
+        const qty = parseInt(qtyEl ? qtyEl.value : 1);
+        if (isNaN(qty) || qty < 1) { showToast('⚠️ Invalid quantity'); return; }
+
         cart.push({ name, size, qty, total: price * qty });
         renderCart();
+
+        // Feedback animácia na tlačidle
+        const btn = document.getElementById('btn_' + id);
+        if (btn) {
+            const orig = btn.innerText;
+            btn.classList.add('added');
+            btn.innerText = '✓ Added!';
+            setTimeout(() => {
+                btn.classList.remove('added');
+                btn.innerText = orig;
+            }, 1200);
+        }
     }
 
     function renderCart() {
@@ -337,9 +516,21 @@
         const totalDisp = document.getElementById('cart-total-price');
         if (cart.length === 0) { summary.style.display = "none"; return; }
         summary.style.display = "block";
-        list.innerHTML = cart.map((item, index) => `<div style="margin-bottom:5px;">• ${item.qty}x ${item.name} (${item.size}) - ${item.total} pts <span style="color:#ff4d4d; cursor:pointer; font-weight:bold; margin-left:10px;" onclick="removeItem(${index})">[x]</span></div>`).join('');
+        list.innerHTML = cart.map((item, index) =>
+            `<div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px solid #f0f0f0;">
+                <span>• ${item.qty}× ${item.name} <span style="color:#888;">(${item.size})</span></span>
+                <span style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-weight:600;">${item.total} pts</span>
+                    <span style="color:#ef4444; cursor:pointer; font-size:1.1em; line-height:1;" onclick="removeItem(${index})" title="Remove">×</span>
+                </span>
+            </div>`
+        ).join('');
         const total = cart.reduce((sum, item) => sum + item.total, 0);
         totalDisp.innerText = total;
+
+        // Vizuálne upozornenie pri prekročení limitu
+        const overBudget = total > currentBalance;
+        totalDisp.style.color = overBudget ? '#ef4444' : '#22c55e';
     }
 
     function removeItem(index) { cart.splice(index, 1); renderCart(); }
@@ -347,16 +538,27 @@
 
     function submitOrder() {
         const total = cart.reduce((sum, item) => sum + item.total, 0);
-        if (total > currentBalance) return alert("😥 Not enough credits!");
+        if (total > currentBalance) { showToast('😥 Not enough credits!'); return; }
+        if (cart.length === 0) { showToast('🛒 Cart is empty'); return; }
+
         const email = localStorage.getItem('userEmail');
         const details = cart.map(i => `${i.qty}x ${i.name} (${i.size})`).join(', ');
         if (!confirm(`🛒 Confirm order for ${total} credits?\n\nItems: ${details}`)) return;
         
-        document.getElementById('status-message').innerHTML = '⏳ Processing...';
+        document.getElementById('status-message').innerHTML = '<span style="color:#888;">⏳ Processing your order...</span>';
         
         fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ email: email, item: details, price: total }) })
         .then(res => res.text())
-        .then(res => { if (res === "SUCCESS") { alert("🎉 Your order has been successfully placed! Baska Rybarova will let you know as soon as it arrives 📦"); clearCart(); checkBalance(); } else { alert("Error: " + res); } });
+        .then(res => {
+            if (res === "SUCCESS") {
+                showToast('🎉 Order placed successfully!');
+                clearCart();
+                checkBalance();
+            } else {
+                showToast('❌ Error: ' + res);
+            }
+        })
+        .catch(() => showToast('❌ Connection error. Try again.'));
     }
 </script>
 </body>
