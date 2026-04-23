@@ -782,7 +782,8 @@ function renderDrawer() {
     document.getElementById('btn-confirm').disabled = (cart.length === 0 || remaining < 0);
 }
 function changeCartQty(idx, delta) {
-    cart[idx].qty = Math.max(1, cart[idx].qty + delta);
+    if (cart[idx].qty + delta < 1) { removeItem(idx); return; }
+    cart[idx].qty = cart[idx].qty + delta;
     refreshAllBadges(); updateTopBar(); renderDrawer();
 }
 function removeItem(idx) {
